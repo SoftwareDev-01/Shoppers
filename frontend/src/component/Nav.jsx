@@ -21,7 +21,7 @@ function Nav() {
 
     const handleLogout = async () => {
     try {
-        await axios.post(serverUrl + "/api/auth/logout", {}, { withCredentials: true });
+        await axios.get(serverUrl + "/api/auth/logout", {}, { withCredentials: true });
         setUserData(null);       // clear frontend auth state
         setShowProfile(false);    // close dropdown
         navigate("/login");       // redirect to login page
