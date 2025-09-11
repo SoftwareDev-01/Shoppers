@@ -13,7 +13,7 @@ import { authDataContext } from '../context/AuthContext';
 import { shopDataContext } from '../context/ShopContext';
 
 function Nav() {
-    const { getCurrentUser, userData,setUserData} = useContext(userDataContext)
+    const { getCurrentUser,userData,setUserData} = useContext(userDataContext)
     const { serverUrl } = useContext(authDataContext)
     const { showSearch, setShowSearch, search, setSearch, getCartCount } = useContext(shopDataContext)
     const [showProfile, setShowProfile] = useState(false)
@@ -200,7 +200,7 @@ function Nav() {
                         {userData && (
                             <li
                                 className='px-5 py-3 cursor-pointer hover:bg-[#111111] rounded transition'
-                                onClick={() => { handleLogout(); setShowProfile(false) }}
+                                onClick={handleLogout}
                             >
                                 Logout
                             </li>
