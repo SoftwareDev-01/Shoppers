@@ -1,86 +1,220 @@
-import React from 'react'
-import Logo from "../assets/logo.png"
+import React, { useState, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import google from '../assets/google.png'
-import { IoEyeOutline } from "react-icons/io5";
-import { IoEye } from "react-icons/io5";
-import { useState } from 'react';
-import { useContext } from 'react';
-import { authDataContext } from '../context/AuthContext';
+import { IoEyeOutline, IoEye } from "react-icons/io5";
 import axios from 'axios';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../../utils/Firebase';
+import { motion } from 'framer-motion'
+
+import Logo from "../assets/logo.png"
+import google from '../assets/google.png'
+import { authDataContext } from '../context/AuthContext';
 import { userDataContext } from '../context/UserContext';
+
 function Registration() {
-    let [show,setShow]=useState(false)
-    let {serverUrl} = useContext(authDataContext)
-    let navigate= useNavigate()
-    let [name,setName]=useState("")
-    let [email,setEmail]=useState("")
-    let [password,setPassword]=useState("")
-    let {userdata,getCurrentUser}= useContext(userDataContext)
- const handleSignup= async(e)=>{
-     e.preventDefault()
-   try{
-    const result=await axios.post(serverUrl + '/api/auth/registration',{
-        name,email,password
-    },{withCredentials:true})
-    console.log(result.data)
-   }catch(error){
-    console.log(error)
-   }
- }
+  const [show, setShow] = useState(false)
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const { serverUrl } = useContext(authDataContext)
+  const { getCurrentUser } = useContext(userDataContext)
+  const navigate = useNavigate()
 
- const googleSignup= async()=>{
-    try{
-    const response= await signInWithPopup(auth,provider)
-    let user = response.user
-    let name= user.displayName;
-    let email= user.email
-    const result= await axios.post(serverUrl + "/api/auth/googlelogin",{name,email},{withCredentials:true})
-    getCurrentUser()
-    navigate("/")
-    console.log(result.data)
-    }catch(error){
-       console.log(error)
+  const handleSignup = async (e) => {
+    e.preventDefault()
+    try {
+      const result = await axios.post(serverUrl + '/api/auth/registration', {
+        name, email, password
+      }, { withCredentials: true })
+      console.log(result.data)
+      getCurrentUser()
+      navigate("/")
+    } catch (error) {
+      console.log(error)
     }
- }
+  }
 
+  const googleSignup = async () => {
+    try {
+      const response = await signInWithPopup(auth, provider)
+      const user = response.user
+      const name = user.displayName
+      const email = user.email
+      const result = await axios.post(serverUrl + "/api/auth/googlelogin", { name, email }, { withCredentials: true })
+      console.log(result.data)
+      getCurrentUser()
+      navigate("/")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // Cursor reactive background light
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY })
+    }
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
+  }, [])
+
+  const bgImageURL = "/bgg.png" // Your background image path
+
+  // Animation Variants
+  const containerVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { staggerChildren: 0.15, ease: "easeOut", duration: 0.5 }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 }
+  }
 
   return (
-    <div className='w-[100vw] h-[100vh] bg-gradient-to-l from-[#141414] to-[#0c2025] text-[white] flex flex-col items-center justify-start'>
-      <div className='w-[100%] h-[80px] flex items-center justify-start px-[30px] gap-[10px] cursor-pointer' onClick={()=>navigate("/")}>
-        <img className='w-[40px]' src={Logo} alt=""/>
-        <h1 className='text-[22px] font-sans'>One Cart</h1>
+    <div className="w-full h-screen relative overflow-hidden font-sans text-white">
+
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src={bgImageURL}
+          alt="Background"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0b1f3a] via-[#0b1f3ad9] to-[#0b1f3ae0] z-10" />
+        <div
+          className="absolute pointer-events-none w-[300px] h-[300px] bg-[#e6c97a33] rounded-full blur-3xl opacity-20 z-20 transition-all duration-300"
+          style={{
+            left: mousePos.x - 150,
+            top: mousePos.y - 150,
+            position: "absolute"
+          }}
+        />
       </div>
 
+      {/* Foreground */}
+      <div className="relative z-30 flex flex-col items-center">
 
-      <div className='w-[100%] h-[100px] flex items-center justify-center flex-col gap-[10px]'>
-        <span className='text-[25px] font-semibold'>Registration Page</span>
-        <span className='text-[16px]'>Welcome to OneCart,Place Your Order</span>
-      </div>
+        {/* Logo Navbar */}
+        <motion.div
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="w-full h-[80px] flex items-center px-8 gap-4 cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          <img src={Logo} className="w-[40px]" alt="Logo" />
+          <h1 className="text-[24px] text-[#f5f1e8] tracking-wider font-serif">Shoppers</h1>
+        </motion.div>
 
-      <div className='max-w-[600px] w-[90%] h-[500px] bg-[#00000025] border-[1px] border-[#96969635] backdrop:blur-2xl rounded-lg shadow-lg flex items-center justify-center'>
-        <form action="" onSubmit={handleSignup} className='w-[90%] h-[90%] flex flex-col items-center justify-start gap-[20px]'>
-         <div className='w-[90%] h-[50px] bg-[#42656cae] rounded-lg flex items-center justify-center gap-[10px] py-[20px] cursor-pointer' onClick={googleSignup}>
-            <img src={google} alt="" className='w-[20px]'/>Registration With Google
-         </div>
-         <div className='w-[100%] h-[20px] flex items-center justify-center gap-[10px]'>
-            <div className='w-[40%] h-[1px] bg-[#96969635]'></div> OR
-            <div className='w-[40%] h-[1px] bg-[#96969635]'></div>
-         </div>
-         <div className='w-[90%] h-[400px] flex flex-col items-center justify-center gap-[15px] relative'>
-           <input type="text" className='w-[100%] h-[50px] border-[2px] border-[#96969635] backdrop:blur-sm rounded-lg shadow-lg bg-transparent placeholder-[#ffffffc7] px-[20px] font-semibold' placeholder='Username' required onChange={(e)=>setName(e.target.value)} value={name}/>
-           <input type="text" className='w-[100%] h-[50px] border-[2px] border-[#96969635] backdrop:blur-sm rounded-lg shadow-lg bg-transparent placeholder-[#ffffffc7] px-[20px] font-semibold' placeholder='Email' required onChange={(e)=>setEmail(e.target.value)} value={email}/>
-           <input type={show?"text":"password"} className='w-[100%] h-[50px] border-[2px] border-[#96969635] backdrop:blur-sm rounded-lg shadow-lg bg-transparent placeholder-[#ffffffc7] px-[20px] font-semibold' placeholder='PassWord' required onChange={(e)=>setPassword(e.target.value)} value={password} />
-            {!show && <IoEyeOutline className='w-[20px] h-[20px] cursor-pointer absolute right-[5%]'onClick={()=>setShow(prev=> !prev)}/>}
-            {show && <IoEye className='w-[20px] h-[20px] cursor-pointer absolute right-[5%]' onClick={()=>setShow(prev=> !prev)}/>}
-            <button className='w-[100%] h-[50px] bg-[#6060f5] rounded-lg flex flex-col items-center justify-center mt-[20px] text-[17px] font-semibold'>Create Account</button>
-            <p className='flex gap-[10px]'>You have any account?<span className='text-[#5555f6cf] text-[17px] font-semibold cursor-pointer'onClick={()=>navigate("/login")}>Login</span></p>
-         
-         
-         </div>
-        </form>
+        {/* Page Title */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.7, ease: "easeOut" }}
+          className="text-center my-6"
+        >
+          <h2 className="text-[30px] font-serif text-[#f5f1e8] mb-2">Create Account</h2>
+          <p className="text-[#e0dcd0] text-[16px]">Join Shoppers and start your royal journey</p>
+        </motion.div>
+
+        {/* Registration Form */}
+        <motion.div
+          className="w-[90%] max-w-[480px] bg-[#ffffff0a] backdrop-blur-2xl border border-[#ffffff14] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.35)] px-8 py-10 hover:scale-[1.01] hover:shadow-[0_0_30px_#c7a45e44] transition-all duration-300"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          transition={{ delay: 0.5 }}
+        >
+          <form onSubmit={handleSignup} className="flex flex-col gap-6">
+
+            <motion.div
+              variants={itemVariants}
+              className="flex items-center justify-center gap-3 py-3 px-5 rounded-lg bg-gradient-to-r from-[#c7a45e] to-[#e6c97a] text-[#0b1f3a] font-semibold cursor-pointer transition-all duration-300 hover:shadow-[0_0_12px_#e6c97a]"
+              onClick={googleSignup}
+            >
+              <img src={google} alt="Google" className="w-5" />
+              Sign up with Google
+            </motion.div>
+
+            <motion.div
+              variants={itemVariants}
+              className="flex items-center gap-4 text-[#aaa] text-sm justify-center"
+            >
+              <div className="flex-1 h-px bg-[#aaa4]"></div>
+              OR
+              <div className="flex-1 h-px bg-[#aaa4]"></div>
+            </motion.div>
+
+            <motion.input
+              variants={itemVariants}
+              type="text"
+              placeholder="Username"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-transparent border border-[#f5f1e833] placeholder-[#f5f1e8b4] text-[#f5f1e8] font-medium focus:outline-none focus:border-[#c7a45e] transition duration-300"
+            />
+
+            <motion.input
+              variants={itemVariants}
+              type="text"
+              placeholder="Email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-transparent border border-[#f5f1e833] placeholder-[#f5f1e8b4] text-[#f5f1e8] font-medium focus:outline-none focus:border-[#c7a45e] transition duration-300"
+            />
+
+            <motion.div
+              variants={itemVariants}
+              className="relative"
+            >
+              <input
+                type={show ? "text" : "password"}
+                placeholder="Password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-transparent border border-[#f5f1e833] placeholder-[#f5f1e8b4] text-[#f5f1e8] font-medium focus:outline-none focus:border-[#c7a45e] transition duration-300"
+              />
+              <div
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-[#f5f1e8]"
+                onClick={() => setShow(prev => !prev)}
+              >
+                {show ? <IoEye size={20} /> : <IoEyeOutline size={20} />}
+              </div>
+            </motion.div>
+
+            <motion.button
+              variants={itemVariants}
+              type="submit"
+              className="w-full py-3 mt-2 rounded-lg bg-gradient-to-r from-[#c7a45e] to-[#e6c97a] text-[#0b1f3a] font-semibold text-[16px] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_12px_#e6c97a]"
+            >
+              Create Account
+            </motion.button>
+
+            <motion.p
+              variants={itemVariants}
+              className="text-center text-sm text-[#e0dcd0]"
+            >
+              Already have an account?{' '}
+              <span
+                className="text-[#e6c97a] font-semibold cursor-pointer hover:underline"
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </span>
+            </motion.p>
+
+          </form>
+        </motion.div>
       </div>
     </div>
   )
