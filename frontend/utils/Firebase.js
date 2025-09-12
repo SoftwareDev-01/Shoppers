@@ -5,7 +5,7 @@ const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_APIKEY ,
   authDomain: "loginonecart-295ac.firebaseapp.com",
   projectId: "loginonecart-295ac",
-  storageBucket: "loginonecart-295ac.firebasestorage.app",
+  storageBucket: "loginonecart-295ac.appspot.com",
   messagingSenderId: "3650319806",
   appId: "1:3650319806:web:1d9b573f9000287ac7b5ef"
 };
