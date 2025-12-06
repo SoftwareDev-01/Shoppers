@@ -99,6 +99,3 @@ Dockerize the app for easy deployment
 📄 License
 This project is currently unlicensed / MIT licensed / your license — (choose a license and add here)
 
-📞 Contact / Author
-Your Name — GitHub: SoftwareDev-01
-Feel free to drop issues or pull requests 👋
