@@ -7,7 +7,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useEffect } from 'react'
 import { userDataContext } from './UserContext'
-// removed accidental backend controller import
+import { getUserCart } from '../../../backend/controller/cartController'
 export const shopDataContext = createContext()
 
 function ShopContext({ children }) {
