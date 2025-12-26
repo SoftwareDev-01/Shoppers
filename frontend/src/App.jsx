@@ -18,6 +18,8 @@ import PlaceOrder from './pages/PlaceOrder'
 import Order from './pages/Order'
 import NotFound from './pages/NotFound'
 import Ai from './component/Ai'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 function App() {
 
    let {userData}= useContext(userDataContext)
@@ -69,6 +71,7 @@ function App() {
        <Route path='*' element={<NotFound/>}/>
     </Routes>
     <Ai/>
+    <ToastContainer />
     </>
   )
 }

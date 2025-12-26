@@ -16,8 +16,12 @@ let app=express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-origin:["https://shoppers-frontend-ydpn.onrender.com", "https://shoppers-sn1s.onrender.com" ],
-credentials:true
+    origin:[
+        "https://shoppers-frontend-ydpn.onrender.com",
+        "https://shoppers-sn1s.onrender.com",
+        "http://localhost:5173"
+    ],
+    credentials:true
 }))
 
 app.use("/api/auth",authRoutes)
