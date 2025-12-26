@@ -1,16 +1,17 @@
 import React from 'react'
 import { createContext } from 'react'
-
-export const authDataContext = createContext()
-
-function AuthContext({ children }) {
-  const serverUrl = import.meta.env.VITE_SERVER_URL || 'https://shoppers-backend-lmwv.onrender.com'
-  const value = { serverUrl }
-
+export const authDataContext=createContext()
+function AuthContext({children}) {
+    let serverUrl = "https://shoppers-backend-lmwv.onrender.com"
+    let value= {
+        serverUrl
+    }
   return (
-    <authDataContext.Provider value={value}>
-      {children}
-    </authDataContext.Provider>
+    <div>
+      <authDataContext.Provider value={value}>
+        {children}
+      </authDataContext.Provider>
+    </div>
   )
 }
 
