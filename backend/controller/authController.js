@@ -20,12 +20,13 @@ export  const registration= async(req,res)=>{
 
         const user = await User.create({name,email,password:hashPassword}) 
         let token = await gentoken(user._id)
-        res.cookie("token",token,{
+        const cookieOptions = {
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            maxAge: 7*24*60*1000
-        })
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: 7*24*60*60*1000
+        }
+        res.cookie("token", token, cookieOptions)
         return res.status(201).json(user)
     }
     catch(error){
@@ -43,12 +44,13 @@ export const login= async(req,res)=>{
         if(!isMatch)  return res.status(400).json({message:"Incorrect Password"})
            
             let token = await gentoken(user._id)
-            res.cookie("token",token,{
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            maxAge: 7*24*60*1000
-        })
+            const cookieOptions = {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 7*24*60*60*1000
+            }
+            res.cookie("token", token, cookieOptions)
         return res.status(201).json(user)
     }catch(error){
         console.log("login error")
@@ -60,11 +62,12 @@ export const login= async(req,res)=>{
 
 export const logOut= async (req,res)=>{
  try{
-res.clearCookie("token",{
-    httpOnly: true,
-    secure: true,
-    sameSite: "none"
-})
+    const clearOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+    }
+    res.clearCookie("token", clearOptions)
   return res.status(200).json({message:"Logout Successfully"})
  }catch(err){
     console.log("Logout error")
@@ -84,12 +87,13 @@ export const googleLogin= async(req,res)=>{
         }
            
             let token = await gentoken(user._id)
-            res.cookie("token",token,{
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            maxAge: 7*24*60*1000
-        })
+            const cookieOptions = {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 7*24*60*60*1000
+            }
+            res.cookie("token", token, cookieOptions)
         return res.status(200).json(user)
 
     }catch(error){
@@ -102,14 +106,15 @@ export const googleLogin= async(req,res)=>{
 export const adminLogin= async(req,res)=>{
     try{
       let {email , password}= req.body
-       if(email===process.env.ADMIN_EMAIL && password===process.env.ADMIN_PASSWORD){
+        if(email===process.env.ADMIN_EMAIL && password===process.env.ADMIN_PASSWORD){
         let token = await gentoken1(email)
-            res.cookie("token",token,{
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            maxAge: 1*24*60*1000
-        })
+            const cookieOptions = {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 1*24*60*60*1000
+            }
+            res.cookie("token", token, cookieOptions)
         return res.status(200).json(token)
        }
        return res.status(400).json({message:"Invalid credentials"})
