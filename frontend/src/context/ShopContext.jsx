@@ -7,7 +7,6 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useEffect } from 'react'
 import { userDataContext } from './UserContext'
-import { getUserCart } from '../../../backend/controller/cartController'
 export const shopDataContext = createContext()
 
 function ShopContext({ children }) {
@@ -72,8 +71,10 @@ function ShopContext({ children }) {
             setCartItem(result.data)
         }
         catch (error) {
-            console.log(error)
-            toast.error(error.message)
+            console.log(error.response?.data || error.message)
+            if (error.response?.status !== 400) {
+                toast.error(error.response?.data?.message || error.message)
+            }
         }
     }
 
@@ -136,8 +137,12 @@ function ShopContext({ children }) {
     }, [])
 
     useEffect(() => {
-        getUserCart()
-    }, [])
+        if (userData) {
+            getUserCart()
+        } else {
+            setCartItem({})
+        }
+    }, [userData])
 
     let value = {
         products, currency, delivery_fee, getProducts, search, setSearch, showSearch, setShowSearch, cartItem, addtoCart, getCartCount, setCartItem, updateQuantity, getCartAmount

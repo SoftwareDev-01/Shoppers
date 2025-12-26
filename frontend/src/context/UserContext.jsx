@@ -19,8 +19,10 @@ function UserContext({children}) {
           setUserData(result.data)
           console.log(result.data)
         }catch(error){
-            setUserData(null)
-          console.log(error)
+          setUserData(null)
+          if (error.response?.status !== 400) {
+            console.error(error.response?.data?.message || error.message)
+          }
         }
     }
     useEffect(()=>{
