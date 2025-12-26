@@ -20,15 +20,15 @@ function Nav() {
     const navigate = useNavigate()
 
     const handleLogout = async () => {
-    try {
-        await axios.get(serverUrl + "/api/auth/logout", {}, { withCredentials: true });
-        setUserData(null);       // clear frontend auth state
-        setShowProfile(false);    // close dropdown
-        navigate("/login");       // redirect to login page
-    } catch (error) {
-        console.log("Logout failed:", error);
+        try {
+            await axios.get(serverUrl + "/api/auth/logout", { withCredentials: true });
+            setUserData(null)
+            setShowProfile(false)
+            navigate('/login')
+        } catch (error) {
+            console.log('Logout failed:', error)
+        }
     }
-}
 
     const handleNavClick = (path) => {
         setShowSearch(false)

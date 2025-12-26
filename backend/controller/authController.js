@@ -26,6 +26,7 @@ export  const registration= async(req,res)=>{
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 7*24*60*60*1000
         }
+        console.log('Setting cookie on registration:', { tokenPreview: token?.slice?.(0,10), cookieOptions })
         res.cookie("token", token, cookieOptions)
         return res.status(201).json(user)
     }
@@ -50,6 +51,7 @@ export const login= async(req,res)=>{
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: 7*24*60*60*1000
             }
+            console.log('Setting cookie on login:', { tokenPreview: token?.slice?.(0,10), cookieOptions })
             res.cookie("token", token, cookieOptions)
         return res.status(201).json(user)
     }catch(error){
@@ -71,7 +73,7 @@ export const logOut= async (req,res)=>{
   return res.status(200).json({message:"Logout Successfully"})
  }catch(err){
     console.log("Logout error")
-    return res.status(500).json({message:`Logout Error${error}`})
+     return res.status(500).json({message:`Logout Error ${err}`})
  }
 }
 
@@ -93,6 +95,7 @@ export const googleLogin= async(req,res)=>{
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: 7*24*60*60*1000
             }
+            console.log('Setting cookie on googleLogin:', { tokenPreview: token?.slice?.(0,10), cookieOptions })
             res.cookie("token", token, cookieOptions)
         return res.status(200).json(user)
 
@@ -114,6 +117,7 @@ export const adminLogin= async(req,res)=>{
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: 1*24*60*60*1000
             }
+            console.log('Setting cookie on adminLogin:', { tokenPreview: token?.slice?.(0,10), cookieOptions })
             res.cookie("token", token, cookieOptions)
         return res.status(200).json(token)
        }
